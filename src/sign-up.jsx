@@ -49,7 +49,7 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
     zIndex: -1,
     inset: 0,
     backgroundImage:
-      "radial-gradient(ellipse at 50% 50%, hsl(210, 100%, 97%), hsl(0, 0%, 100%))",
+      "radial-gradient(ellipse at 50% 50%, hsl(212, 72.00%, 46.30%), hsl(210, 60.40%, 78.20%))",
     backgroundRepeat: "no-repeat",
     ...theme.applyStyles("dark", {
       backgroundImage:
@@ -58,17 +58,24 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
   },
 }));
 
+
 const validationSchema = yup.object({
   email: yup
     .string("Enter your email")
     .email("Enter a valid email")
     .required("Email is required"),
+    password: yup
+    .string("Enter your password")
+    .min(8, 'Password is too short - should be 8 chars minimum.')
+  .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.')
+  .required("Password is required")
 });
 
 export default function SignUp(props) {
   const formik = useFormik({
     initialValues: {
       email: "foobar@example.com",
+      password:" ",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -90,7 +97,6 @@ export default function SignUp(props) {
           </Typography>
 
           <FormControl>
-            <FormLabel htmlFor="email">Email</FormLabel>
             <TextField
               fullWidth
               id="email"
@@ -103,12 +109,28 @@ export default function SignUp(props) {
               helperText={formik.touched.email && formik.errors.email}
             />
           </FormControl>
+          <FormControl>
+            <TextField
+              fullWidth
+              id="password"
+              name="password"
+              label="password"
+              type="password"
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.password && Boolean(formik.errors.password)}
+              helperText={formik.touched.password && formik.errors.password}
+            />
+          </FormControl>
 
           <Button type="submit" fullWidth variant="contained">
             Sign up
           </Button>
         </Card>
       </SignUpContainer>
+      
     </form>
+    
   );
 }
